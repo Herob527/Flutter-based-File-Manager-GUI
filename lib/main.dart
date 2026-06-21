@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -28,30 +30,42 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  Future<List<FileSystemEntity>> getDirContent() {
+    final homeDir = Platform.environment['HOME'];
+    if (homeDir == null) {
+      throw Exception('HOME environment variable is not set');
+    }
+    final dir = Directory(homeDir);
+    return dir.list().toList();
+  }
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  Widget buildFileSystemItem(FileSystemEntity entity) {
+    switch (entity.runtimeType) {
+      case File _:
+        return Text(entity.path);
+      case Directory _:
+        return Text(entity.path);
+      default:
+        return Text(entity.path);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    //
     return Scaffold(
       body: Center(
-        child: Column(
-          //
-          //
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        child: FutureBuilder(
+          future: getDirContent(),
+          builder: (context, asyncSnapshot) {
+            if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            }
+            return ListView.builder(
+              itemBuilder: (context, index) =>
+                  buildFileSystemItem(asyncSnapshot.data![index]),
+              itemCount: asyncSnapshot.data!.length,
+            );
+          },
         ),
       ),
     );
