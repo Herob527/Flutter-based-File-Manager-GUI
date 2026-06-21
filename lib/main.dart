@@ -30,11 +30,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Future<List<FileSystemEntity>> getDirContent() {
+  Future<List<FileSystemEntity>> getDirContent() async {
     final homeDir = Platform.environment['HOME'];
     if (homeDir == null) {
       throw Exception('HOME environment variable is not set');
     }
+    await Future.delayed(const Duration(seconds: 1));
     final dir = Directory(homeDir);
     return dir.list().toList();
   }
@@ -53,20 +54,36 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: FutureBuilder(
-          future: getDirContent(),
-          builder: (context, asyncSnapshot) {
-            if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            }
-            return ListView.builder(
-              itemBuilder: (context, index) =>
-                  buildFileSystemItem(asyncSnapshot.data![index]),
-              itemCount: asyncSnapshot.data!.length,
-            );
-          },
-        ),
+      body: Column(
+        children: [
+          TextField(),
+          FutureBuilder(
+            future: getDirContent(),
+            builder: (context, asyncSnapshot) {
+              if (asyncSnapshot.connectionState == .waiting) {
+                return Container(
+                  alignment: .topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) =>
+                        buildFileSystemItem(asyncSnapshot.data![index]),
+                    itemCount: asyncSnapshot.data!.length,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
