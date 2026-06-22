@@ -3,6 +3,13 @@ import 'dart:io';
 
 @injectable
 class FileSystemService {
+  String get homeDir => switch (Platform.operatingSystem) {
+    'windows' => Platform.environment['USERPROFILE']!,
+    'macos' => Platform.environment['HOME']!,
+    'linux' => Platform.environment['HOME']!,
+    _ => throw UnsupportedError('Unsupported platform'),
+  };
+
   Future<List<FileSystemEntity>> getDirContent(String searchDir) async {
     await Future.delayed(const Duration(seconds: 1));
     final dir = Directory(searchDir);
