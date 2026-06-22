@@ -37,8 +37,7 @@ enum Mode { list, search }
 class _MyHomePageState extends State<MyHomePage> {
   var _mode = Mode.list;
   final FileSystemService fileSystemService = getIt<FileSystemService>();
-  String get _currentDir => fileSystemService.homeDir;
-  set _currentDir(String? value) => value!;
+  String _currentDir = getIt<FileSystemService>().homeDir;
 
   Widget buildFileSystemItem(FileSystemEntity entity, bool isFirst) {
     final textWidget = Text(entity.path.split("/").last);
