@@ -98,9 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
           FutureBuilder(
             future: fileSystemService.getDirContent(_currentDir),
             builder: (context, asyncSnapshot) {
-              if (asyncSnapshot.connectionState == .waiting ||
-                  asyncSnapshot.connectionState == .none ||
-                  asyncSnapshot.data == null) {
+              if (asyncSnapshot.connectionState == .waiting) {
                 return Container(
                   alignment: .topLeft,
                   child: Padding(
