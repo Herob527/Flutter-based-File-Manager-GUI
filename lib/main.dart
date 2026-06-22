@@ -29,7 +29,10 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+enum Mode { list, search }
+
 class _MyHomePageState extends State<MyHomePage> {
+  var _mode = Mode.list;
   Future<List<FileSystemEntity>> getDirContent() async {
     final homeDir = Platform.environment['HOME'];
     if (homeDir == null) {
