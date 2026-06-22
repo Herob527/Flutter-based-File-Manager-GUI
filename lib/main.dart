@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:file_manager_ripgrep_test/core/services/FileSystemService.dart';
+import 'package:file_manager_ripgrep_test/core/services/file_system_service.dart';
 import 'package:file_manager_ripgrep_test/init.dart';
 import 'package:flutter/material.dart';
 
@@ -62,14 +62,23 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     if (isFirst) {
       return Column(
+        crossAxisAlignment: .start,
         children: [
-          TextButton(
-            onPressed: () {
-              setState(() {
-                _currentDir = (_currentDir.split("/")..removeLast()).join("/");
-              });
-            },
-            child: Text(".."),
+          Row(
+            spacing: 4,
+            children: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _currentDir = (_currentDir.split(
+                      "/",
+                    )..removeLast()).join("/");
+                  });
+                },
+                icon: Icon(Icons.folder),
+              ),
+              Text(".."),
+            ],
           ),
           Row(spacing: 4, children: [icon, textWidget]),
         ],
@@ -86,6 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () => setState(() => _mode = Mode.search),
             icon: const Icon(Icons.search),
           ),
+          Expanded(child: Text(_currentDir)),
         ],
       );
     }
