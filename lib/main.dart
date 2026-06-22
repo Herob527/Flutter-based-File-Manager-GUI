@@ -36,10 +36,11 @@ enum Mode { list, search }
 
 class _MyHomePageState extends State<MyHomePage> {
   var _mode = Mode.list;
-  var _currentDir = Platform.environment['HOME'];
   final FileSystemService fileSystemService = getIt<FileSystemService>();
+  String get _currentDir => fileSystemService.homeDir;
+  set _currentDir(String? value) => value!;
 
-  Widget buildFileSystemItem(FileSystemEntity entity) {
+  Widget buildFileSystemItem(FileSystemEntity entity, bool isFirst) {
     final textWidget = Text(entity.path.split("/").last);
     IconButton icon;
     switch (entity) {
@@ -58,6 +59,21 @@ class _MyHomePageState extends State<MyHomePage> {
         icon = IconButton(onPressed: () {}, icon: Icon(Icons.link));
       default:
         icon = IconButton(onPressed: () {}, icon: Icon(Icons.question_mark));
+    }
+    if (isFirst) {
+      return Column(
+        children: [
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _currentDir = (_currentDir.split("/")..removeLast()).join("/");
+              });
+            },
+            child: Text(".."),
+          ),
+          Row(spacing: 4, children: [icon, textWidget]),
+        ],
+      );
     }
     return Row(spacing: 4, children: [icon, textWidget]);
   }
@@ -92,9 +108,11 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           buildTopBar(),
           FutureBuilder(
-            future: fileSystemService.getDirContent(_currentDir!),
+            future: fileSystemService.getDirContent(_currentDir),
             builder: (context, asyncSnapshot) {
-              if (asyncSnapshot.connectionState == .waiting) {
+              if (asyncSnapshot.connectionState == .waiting ||
+                  asyncSnapshot.connectionState == .none ||
+                  asyncSnapshot.data == null) {
                 return Container(
                   alignment: .topLeft,
                   child: Padding(
@@ -110,8 +128,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     key: ValueKey("List ${asyncSnapshot.hashCode}"),
                     physics: const AlwaysScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemBuilder: (context, index) =>
-                        buildFileSystemItem(asyncSnapshot.data![index]),
+                    itemBuilder: (context, index) => buildFileSystemItem(
+                      asyncSnapshot.data![index],
+                      index == 0,
+                    ),
                     itemCount: asyncSnapshot.data!.length,
                   ),
                 ),
