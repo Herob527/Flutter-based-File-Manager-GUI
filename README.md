@@ -5,12 +5,14 @@ This project aims to experiment with wrapping `ripgrep`, `fd-find`, `find` and o
 ## Stack
 
 - dart
+- flutter
 - get_it and injectable for DI
 - build_runner
 
 ## Scope
 
-- [x]  Add traversal through file system
-- [ ]  Add checking for executables of ripgrep and others
-- [ ]  Add search using ripgrep
-- [ ]  Add capability to choose between search backends (ripgrep, fd-find)
+- [x] Add traversal through file system
+- [ ] Add checking for executables of ripgrep and others
+- [ ] Add search using ripgrep
+- [ ] Add capability to choose between search backends (ripgrep, fd-find)
+- [ ] Compatibility with Linux, Windows and macOS
