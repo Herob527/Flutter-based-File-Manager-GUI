@@ -23,4 +23,6 @@ class FileSystemService {
       (a, b) => a.runtimeType.toString().compareTo(b.runtimeType.toString()),
     );
   }
+
+  String getParent(String dir) => Directory(dir).absolute.parent.path;
 }
