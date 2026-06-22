@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case Link _:
         icon = IconButton(onPressed: () {}, icon: Icon(Icons.link));
       default:
-        throw UnimplementedError();
+        icon = IconButton(onPressed: () {}, icon: Icon(Icons.question_mark));
     }
     return Row(spacing: 4, children: [icon, textWidget]);
   }
