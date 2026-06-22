@@ -10,7 +10,7 @@ This project aims to experiment with wrapping `ripgrep`, `fd-find`, `find` and o
 
 ## Scope
 
-[-]  Add traversal through file system
-[ ]  Add checking for executables of ripgrep and others
-[ ]  Add search using ripgrep
-[ ]  Add capability to choose between search backends (ripgrep, fd-find)
+- [x]  Add traversal through file system
+- [ ]  Add checking for executables of ripgrep and others
+- [ ]  Add search using ripgrep
+- [ ]  Add capability to choose between search backends (ripgrep, fd-find)
