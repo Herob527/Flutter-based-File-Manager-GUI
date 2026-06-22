@@ -41,14 +41,39 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget buildFileSystemItem(FileSystemEntity entity) {
-    switch (entity.runtimeType) {
+    final textWidget = Text(entity.path.split("/").last);
+    var icon = Icons.file_copy;
+    switch (entity) {
       case File _:
-        return Text(entity.path);
+        icon = Icons.file_copy;
       case Directory _:
-        return Text(entity.path);
+        icon = Icons.folder;
       default:
-        return Text(entity.path);
+        icon = Icons.link;
     }
+    return Row(spacing: 4, children: [Icon(icon), textWidget]);
+  }
+
+  Widget buildTopBar() {
+    if (_mode == Mode.list) {
+      return Row(
+        children: [
+          IconButton(
+            onPressed: () => setState(() => _mode = Mode.search),
+            icon: const Icon(Icons.search),
+          ),
+        ],
+      );
+    }
+    return Row(
+      children: [
+        Expanded(child: TextField()),
+        IconButton(
+          onPressed: () => setState(() => _mode = Mode.list),
+          icon: const Icon(Icons.arrow_back),
+        ),
+      ],
+    );
   }
 
   @override
@@ -56,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Column(
         children: [
-          TextField(),
+          buildTopBar(),
           FutureBuilder(
             future: getDirContent(),
             builder: (context, asyncSnapshot) {
@@ -69,10 +94,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 );
               }
+              final items = asyncSnapshot.data
+                ?..sort(
+                  (a, b) => a.runtimeType.toString().compareTo(
+                    b.runtimeType.toString(),
+                  ),
+                );
               return Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.builder(
+                    key: ValueKey("List ${items.hashCode}"),
                     physics: const AlwaysScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) =>
