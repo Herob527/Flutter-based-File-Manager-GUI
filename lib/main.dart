@@ -36,20 +36,28 @@ enum Mode { list, search }
 
 class _MyHomePageState extends State<MyHomePage> {
   var _mode = Mode.list;
+  var _currentDir = Platform.environment['HOME'];
   final FileSystemService fileSystemService = getIt<FileSystemService>();
 
   Widget buildFileSystemItem(FileSystemEntity entity) {
     final textWidget = Text(entity.path.split("/").last);
-    var icon = Icons.file_copy;
+    IconButton icon;
     switch (entity) {
       case File _:
-        icon = Icons.file_copy;
+        icon = IconButton(onPressed: () {}, icon: Icon(Icons.file_copy));
       case Directory _:
-        icon = Icons.folder;
+        icon = IconButton(
+          onPressed: () {
+            setState(() {
+              _currentDir = entity.path;
+            });
+          },
+          icon: Icon(Icons.folder),
+        );
       default:
-        icon = Icons.link;
+        icon = IconButton(onPressed: () {}, icon: Icon(Icons.link));
     }
-    return Row(spacing: 4, children: [Icon(icon), textWidget]);
+    return Row(spacing: 4, children: [icon, textWidget]);
   }
 
   Widget buildTopBar() {
@@ -82,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           buildTopBar(),
           FutureBuilder(
-            future: fileSystemService.getDirContent(),
+            future: fileSystemService.getDirContent(_currentDir!),
             builder: (context, asyncSnapshot) {
               if (asyncSnapshot.connectionState == .waiting) {
                 return Container(
