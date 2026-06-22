@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
 import 'core/services/file_system_service.dart' as _i502;
+import 'core/services/search_service.dart' as _i1064;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -22,6 +23,7 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.factory<_i502.FileSystemService>(() => _i502.FileSystemService());
+    gh.factory<_i1064.SearchService>(() => _i1064.SearchService());
     return this;
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_manager_ripgrep_test/core/services/file_system_service.dart';
+import 'package:file_manager_ripgrep_test/core/services/search_service.dart';
 import 'package:file_manager_ripgrep_test/init.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,9 @@ enum Mode { list, search }
 class _MyHomePageState extends State<MyHomePage> {
   var _mode = Mode.list;
   final FileSystemService fileSystemService = getIt<FileSystemService>();
+  final SearchService searchService = getIt<SearchService>();
   String _currentDir = getIt<FileSystemService>().homeDir;
+  String _searchQuery = "test";
 
   Widget buildFileSystemItem(FileSystemEntity entity, bool isFirst) {
     final textWidget = Text(entity.path.split("/").last);
@@ -62,7 +65,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       );
     }
-    return Row(spacing: 4, children: [icon, textWidget]);
+    return Row(
+      key: ValueKey(entity.path),
+      spacing: 4,
+      children: [icon, textWidget],
+    );
   }
 
   Widget buildTopBar() {
@@ -84,19 +91,27 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: const Icon(Icons.arrow_back),
         ),
 
-        Expanded(child: TextField()),
+        Expanded(
+          child: TextField(
+            onChanged: (query) => setState(() => _searchQuery = query),
+          ),
+        ),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final usedService = switch (_mode) {
+      .list => fileSystemService.getDirContent(_currentDir),
+      .search => searchService.search(_searchQuery, _currentDir),
+    };
     return Scaffold(
       body: Column(
         children: [
           buildTopBar(),
           FutureBuilder(
-            future: fileSystemService.getDirContent(_currentDir),
+            future: usedService,
             builder: (context, asyncSnapshot) {
               if (asyncSnapshot.connectionState == .waiting) {
                 return Container(
@@ -111,7 +126,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.builder(
-                    key: ValueKey("List ${asyncSnapshot.hashCode}"),
                     physics: const AlwaysScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) => buildFileSystemItem(
