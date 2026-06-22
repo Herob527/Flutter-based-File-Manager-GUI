@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
       default:
         icon = IconButton(onPressed: () {}, icon: Icon(Icons.question_mark));
     }
-    if (isFirst) {
+    if (isFirst && !fileSystemService.isRoot(_currentDir)) {
       return Column(
         crossAxisAlignment: .start,
         children: [
@@ -69,9 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
               IconButton(
                 onPressed: () {
                   setState(() {
-                    _currentDir = (_currentDir.split(
-                      "/",
-                    )..removeLast()).join("/");
+                    _currentDir = fileSystemService.getParent(_currentDir);
                   });
                 },
                 icon: Icon(Icons.folder),
