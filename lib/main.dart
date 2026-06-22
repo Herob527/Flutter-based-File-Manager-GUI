@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:file_manager_ripgrep_test/init.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  configureDependencies();
   runApp(const MyApp());
 }
 
