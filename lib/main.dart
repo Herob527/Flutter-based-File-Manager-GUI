@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_manager_ripgrep_test/core/services/FileSystemService.dart';
 import 'package:file_manager_ripgrep_test/init.dart';
 import 'package:flutter/material.dart';
 
@@ -35,15 +36,7 @@ enum Mode { list, search }
 
 class _MyHomePageState extends State<MyHomePage> {
   var _mode = Mode.list;
-  Future<List<FileSystemEntity>> getDirContent() async {
-    final homeDir = Platform.environment['HOME'];
-    if (homeDir == null) {
-      throw Exception('HOME environment variable is not set');
-    }
-    await Future.delayed(const Duration(seconds: 1));
-    final dir = Directory(homeDir);
-    return dir.list().toList();
-  }
+  final FileSystemService fileSystemService = getIt<FileSystemService>();
 
   Widget buildFileSystemItem(FileSystemEntity entity) {
     final textWidget = Text(entity.path.split("/").last);
@@ -72,11 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return Row(
       children: [
-        Expanded(child: TextField()),
         IconButton(
           onPressed: () => setState(() => _mode = Mode.list),
           icon: const Icon(Icons.arrow_back),
         ),
+
+        Expanded(child: TextField()),
       ],
     );
   }
@@ -88,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           buildTopBar(),
           FutureBuilder(
-            future: getDirContent(),
+            future: fileSystemService.getDirContent(),
             builder: (context, asyncSnapshot) {
               if (asyncSnapshot.connectionState == .waiting) {
                 return Container(
@@ -99,17 +93,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 );
               }
-              final items = asyncSnapshot.data
-                ?..sort(
-                  (a, b) => a.runtimeType.toString().compareTo(
-                    b.runtimeType.toString(),
-                  ),
-                );
               return Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.builder(
-                    key: ValueKey("List ${items.hashCode}"),
+                    key: ValueKey("List ${asyncSnapshot.hashCode}"),
                     physics: const AlwaysScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) =>
