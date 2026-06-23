@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 const defaultDebounce = Duration(milliseconds: 300);
 const initialValue = "test";
 
+enum Mode { list, search }
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -17,8 +19,6 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
-
-enum Mode { list, search }
 
 class _MyHomePageState extends State<MyHomePage> {
   var _mode = Mode.list;
