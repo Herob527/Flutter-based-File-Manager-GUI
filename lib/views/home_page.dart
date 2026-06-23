@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:file_manager_ripgrep_test/core/enums/search_backend.dart';
 import 'package:file_manager_ripgrep_test/core/services/file_system_service.dart';
 import 'package:file_manager_ripgrep_test/core/services/search_service.dart';
 import 'package:file_manager_ripgrep_test/init.dart';
@@ -21,11 +22,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var _mode = Mode.list;
   final FileSystemService fileSystemService = getIt<FileSystemService>();
   final SearchService searchService = getIt<SearchService>();
   String _currentDir = getIt<FileSystemService>().homeDir;
   String _searchQuery = initialValue;
+  Mode _mode = .list;
+  SearchBackends _backend = .ripgrep;
 
   Timer? _debounceTimer;
   TextEditingController? queryController = .new(text: initialValue);
@@ -108,16 +110,42 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
 
         Expanded(
-          child: TextField(
-            controller: queryController,
-            onChanged: (query) {
-              _debounceTimer?.cancel();
-              _debounceTimer = Timer(defaultDebounce, () {
-                setState(() {
-                  _searchQuery = query;
-                });
-              });
-            },
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: queryController,
+                  onChanged: (query) {
+                    _debounceTimer?.cancel();
+                    _debounceTimer = Timer(defaultDebounce, () {
+                      setState(() {
+                        _searchQuery = query;
+                      });
+                    });
+                  },
+                ),
+              ),
+              DropdownButton(
+                value: _backend,
+                onChanged: (value) {
+                  setState(() {
+                    _backend = value!;
+                  });
+                },
+
+                items: [
+                  DropdownMenuItem(
+                    value: SearchBackends.fdfind,
+                    child: Text("fdfind"),
+                  ),
+
+                  DropdownMenuItem(
+                    value: SearchBackends.ripgrep,
+                    child: Text("ripgrep"),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ],
@@ -131,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
       .search => searchService.search(
         _searchQuery,
         _currentDir,
-        backend: .fdfind,
+        backend: _backend,
       ),
     };
     return Scaffold(
