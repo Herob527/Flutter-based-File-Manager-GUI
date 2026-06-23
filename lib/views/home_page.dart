@@ -37,7 +37,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget buildFileSystemItem(FileSystemEntity entity, bool isFirst) {
-    final textWidget = Text(entity.path.split("/").last);
+    final entityName = entity.path.endsWith("/")
+        ? entity.path.substring(0, entity.path.length - 1)
+        : entity.path;
+    final textWidget = Text(entityName);
     IconButton icon;
     switch (entity) {
       case File _:
@@ -86,11 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget buildTopBar() {
-    if (_mode == Mode.list) {
+    if (_mode == .list) {
       return Row(
         children: [
           IconButton(
-            onPressed: () => setState(() => _mode = Mode.search),
+            onPressed: () => setState(() => _mode = .search),
             icon: const Icon(Icons.search),
           ),
           Expanded(child: Text(_currentDir)),
@@ -100,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Row(
       children: [
         IconButton(
-          onPressed: () => setState(() => _mode = Mode.list),
+          onPressed: () => setState(() => _mode = .list),
           icon: const Icon(Icons.arrow_back),
         ),
 
@@ -125,7 +128,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final usedService = switch (_mode) {
       .list => fileSystemService.getDirContent(_currentDir),
-      .search => searchService.search(_searchQuery, _currentDir),
+      .search => searchService.search(
+        _searchQuery,
+        _currentDir,
+        backend: .fdfind,
+      ),
     };
     return Scaffold(
       body: Column(
