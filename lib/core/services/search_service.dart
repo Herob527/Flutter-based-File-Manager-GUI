@@ -7,8 +7,8 @@ import 'package:injectable/injectable.dart';
 const defaultLimit = 10;
 
 enum SearchBackends {
-  ripgrep(template: "rg {query} {baseDir}"),
-  fdfind(template: "fd {query} {baseDir}");
+  ripgrep(template: "rg '{query}' {baseDir}"),
+  fdfind(template: "fd '{query}' {baseDir}");
 
   const SearchBackends({required this.template});
 
