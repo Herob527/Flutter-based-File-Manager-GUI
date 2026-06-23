@@ -46,7 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
     IconButton icon;
     switch (entity) {
       case File _:
-        icon = IconButton(onPressed: () {}, icon: Icon(Icons.file_copy));
+        icon = IconButton(
+          onPressed: () {
+            Process.start("xdg-open", [entity.path]);
+          },
+          icon: Icon(Icons.file_copy),
+        );
       case Directory _:
         icon = IconButton(
           onPressed: () {
