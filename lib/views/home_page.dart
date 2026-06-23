@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final textWidget = Text(
       _mode == .search ? entityPath : entityPath.split("/").last,
     );
-    IconButton icon;
+    Widget icon;
     switch (entity) {
       case File _:
         icon = IconButton(
@@ -55,13 +55,16 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: Icon(Icons.file_copy),
         );
       case Directory _:
-        icon = IconButton(
-          onPressed: () {
+        icon = GestureDetector(
+          onTap: () {
             setState(() {
               _currentDir = entity.path;
             });
           },
-          icon: Icon(Icons.folder),
+          onSecondaryTap: () {
+            Process.start("xdg-open", [entityPath]);
+          },
+          child: IconButton(onPressed: () {}, icon: Icon(Icons.folder)),
         );
       case Link _:
         icon = IconButton(
