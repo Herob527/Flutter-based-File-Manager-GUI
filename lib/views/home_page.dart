@@ -23,6 +23,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String _currentDir = getIt<FileSystemService>().homeDir;
   String _searchQuery = "test";
 
+  TextEditingController? queryController = .new(text: "test");
+
   Widget buildFileSystemItem(FileSystemEntity entity, bool isFirst) {
     final textWidget = Text(entity.path.split("/").last);
     IconButton icon;
@@ -93,7 +95,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
         Expanded(
           child: TextField(
-            onChanged: (query) => setState(() => _searchQuery = query),
+            controller: queryController,
+            onChanged: (query) {
+              setState(() {
+                _searchQuery = query;
+              });
+            },
           ),
         ),
       ],
