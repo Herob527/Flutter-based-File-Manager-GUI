@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
       default:
         icon = IconButton(onPressed: () {}, icon: Icon(Icons.question_mark));
     }
-    if (isFirst && !fileSystemService.isRoot(_currentDir)) {
+    if (_mode == .list && isFirst && !fileSystemService.isRoot(_currentDir)) {
       return Column(
         crossAxisAlignment: .start,
         children: [
