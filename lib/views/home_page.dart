@@ -7,6 +7,7 @@ import 'package:file_manager_ripgrep_test/init.dart';
 import 'package:flutter/material.dart';
 
 const defaultDebounce = Duration(milliseconds: 300);
+const initialValue = "test";
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -24,10 +25,10 @@ class _MyHomePageState extends State<MyHomePage> {
   final FileSystemService fileSystemService = getIt<FileSystemService>();
   final SearchService searchService = getIt<SearchService>();
   String _currentDir = getIt<FileSystemService>().homeDir;
-  String _searchQuery = "test";
+  String _searchQuery = initialValue;
 
   Timer? _debounceTimer;
-  TextEditingController? queryController = .new(text: "test");
+  TextEditingController? queryController = .new(text: initialValue);
 
   @override
   void dispose() {
