@@ -1,19 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:file_manager_ripgrep_test/core/enums/search_backend.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 
 const defaultLimit = 10;
-
-enum SearchBackends {
-  ripgrep(template: "rg '{query}' {baseDir}"),
-  fdfind(template: "fd '{query}' {baseDir}");
-
-  const SearchBackends({required this.template});
-
-  final String template;
-}
 
 @injectable
 class SearchService {
@@ -28,7 +20,7 @@ class SearchService {
     String query,
     String baseDir, {
     int limit = defaultLimit,
-    SearchBackends backend = SearchBackends.ripgrep,
+    SearchBackends backend = .ripgrep,
   }) async {
     try {
       cancelCurrentSearch();
@@ -36,6 +28,8 @@ class SearchService {
       var command = backend.template
           .replaceAll("{query}", query)
           .replaceAll("{baseDir}", baseDir);
+
+      print(command);
 
       _currentProcess = await Process.start('bash', ['-c', command]);
       var result = await _currentProcess!.stdout.transform(utf8.decoder).join();
