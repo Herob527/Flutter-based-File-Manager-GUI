@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:file_manager_ripgrep_test/core/services/file_system_service.dart';
 import 'package:file_manager_ripgrep_test/core/services/search_service.dart';
 import 'package:file_manager_ripgrep_test/init.dart';
 import 'package:flutter/material.dart';
+
+const defaultDebounce = Duration(milliseconds: 300);
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -23,7 +26,14 @@ class _MyHomePageState extends State<MyHomePage> {
   String _currentDir = getIt<FileSystemService>().homeDir;
   String _searchQuery = "test";
 
+  Timer? _debounceTimer;
   TextEditingController? queryController = .new(text: "test");
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
 
   Widget buildFileSystemItem(FileSystemEntity entity, bool isFirst) {
     final textWidget = Text(entity.path.split("/").last);
@@ -97,8 +107,11 @@ class _MyHomePageState extends State<MyHomePage> {
           child: TextField(
             controller: queryController,
             onChanged: (query) {
-              setState(() {
-                _searchQuery = query;
+              _debounceTimer?.cancel();
+              _debounceTimer = Timer(defaultDebounce, () {
+                setState(() {
+                  _searchQuery = query;
+                });
               });
             },
           ),
@@ -127,6 +140,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: const CircularProgressIndicator(),
                   ),
+                );
+              }
+              if (asyncSnapshot.hasError) {
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("Search failed. Please try again."),
                 );
               }
               return Expanded(
