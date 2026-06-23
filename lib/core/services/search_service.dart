@@ -10,10 +10,9 @@ class SearchService {
     String baseDir, {
     int limit = 10,
   }) async {
-    var result = await Process.run('bash', [
-      '-c',
-      "rg -l '${baseDir.replaceAll("'", "'\\''")}' | head -n $limit",
-    ]);
+    var command =
+        "rg -l '$query' ${baseDir.replaceAll("'", "'\\''")} | head -n $limit";
+    var result = await Process.run('bash', ['-c', command]);
 
     var lines = (result.stdout as String)
         .split("\n")
