@@ -4,7 +4,16 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 
-const DEFAULT_LIMIT = 10;
+const defaultLimit = 10;
+
+enum SearchBackends {
+  ripgrep(template: "rg {query} {baseDir}"),
+  fdfind(template: "fd {query} {baseDir}");
+
+  const SearchBackends({required this.template});
+
+  final String template;
+}
 
 @injectable
 class SearchService {
@@ -18,13 +27,16 @@ class SearchService {
   Future<List<FileSystemEntity>> search(
     String query,
     String baseDir, {
-    int limit = DEFAULT_LIMIT,
+    int limit = defaultLimit,
+    SearchBackends backend = SearchBackends.ripgrep,
   }) async {
     try {
       cancelCurrentSearch();
 
-      var command =
-          "rg -l '$query' ${baseDir.replaceAll("'", "'\\''")} | head -n $limit";
+      var command = backend.template
+          .replaceAll("{query}", query)
+          .replaceAll("{baseDir}", baseDir);
+
       _currentProcess = await Process.start('bash', ['-c', command]);
       var result = await _currentProcess!.stdout.transform(utf8.decoder).join();
       await _currentProcess!.stderr.drain();
