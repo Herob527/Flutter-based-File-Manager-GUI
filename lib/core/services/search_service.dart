@@ -16,6 +16,8 @@ class SearchService {
     _currentProcess = null;
   }
 
+  void availableBackends() async {}
+
   Future<List<FileSystemEntity>> search(
     String query,
     String baseDir, {
