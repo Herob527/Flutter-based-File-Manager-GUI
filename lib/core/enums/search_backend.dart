@@ -2,21 +2,21 @@ enum SearchBackends {
   ripgrep(
     name: "ripgrep",
     description: "Search files containing given pattern",
-    template: "rg -l '{query}' {baseDir}",
   ),
   fdfind(
     name: "fdfind",
     description: "Find files according to given pattern",
-    template: "fd '{query}' {baseDir}",
   );
 
-  const SearchBackends({
-    required this.name,
-    required this.description,
-    required this.template,
-  });
+  const SearchBackends({required this.name, required this.description});
 
-  final String template;
   final String name;
   final String description;
+
+  String buildCommand({required String query, required String baseDir}) {
+    return switch (this) {
+      SearchBackends.ripgrep => "rg -l '$query' $baseDir",
+      SearchBackends.fdfind => "fd '$query' $baseDir",
+    };
+  }
 }

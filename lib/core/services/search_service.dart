@@ -25,9 +25,7 @@ class SearchService {
     try {
       cancelCurrentSearch();
 
-      var command = backend.template
-          .replaceAll("{query}", query)
-          .replaceAll("{baseDir}", baseDir);
+      var command = backend.buildCommand(query: query, baseDir: baseDir);
 
       print(command);
 
