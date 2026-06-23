@@ -38,6 +38,23 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  Widget buildGoUpButton() {
+    return Row(
+      spacing: 4,
+      children: [
+        IconButton(
+          onPressed: () {
+            setState(() {
+              _currentDir = fileSystemService.getParent(_currentDir);
+            });
+          },
+          icon: Icon(Icons.folder),
+        ),
+        Text(".."),
+      ],
+    );
+  }
+
   Widget buildFileSystemItem(FileSystemEntity entity, bool isFirst) {
     final entityPath = entity.path.endsWith("/")
         ? entity.path.substring(0, entity.path.length - 1)
@@ -77,20 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return Column(
         crossAxisAlignment: .start,
         children: [
-          Row(
-            spacing: 4,
-            children: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    _currentDir = fileSystemService.getParent(_currentDir);
-                  });
-                },
-                icon: Icon(Icons.folder),
-              ),
-              Text(".."),
-            ],
-          ),
+          buildGoUpButton(),
           Row(spacing: 4, children: [icon, textWidget]),
         ],
       );
@@ -195,6 +199,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.all(8.0),
                   child: Text("Search failed. Please try again."),
                 );
+              }
+              if (asyncSnapshot.data!.isEmpty) {
+                return buildGoUpButton();
               }
               return Expanded(
                 child: Padding(
