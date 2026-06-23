@@ -62,7 +62,12 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: Icon(Icons.folder),
         );
       case Link _:
-        icon = IconButton(onPressed: () {}, icon: Icon(Icons.link));
+        icon = IconButton(
+          onPressed: () {
+            Process.start("xdg-open", [entity.path]);
+          },
+          icon: Icon(Icons.link),
+        );
       default:
         icon = IconButton(onPressed: () {}, icon: Icon(Icons.question_mark));
     }
