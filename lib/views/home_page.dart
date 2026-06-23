@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
       children: [
         IconButton(
           onPressed: () => setState(() => _mode = .list),
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.list),
         ),
 
         Expanded(
