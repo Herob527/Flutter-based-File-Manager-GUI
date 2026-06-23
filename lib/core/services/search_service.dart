@@ -27,8 +27,6 @@ class SearchService {
 
       var command = backend.buildCommand(query: query, baseDir: baseDir);
 
-      print(command);
-
       _currentProcess = await Process.start('bash', ['-c', command]);
       var result = await _currentProcess!.stdout.transform(utf8.decoder).join();
       await _currentProcess!.stderr.drain();
