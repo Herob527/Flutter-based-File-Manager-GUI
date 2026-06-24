@@ -18,6 +18,9 @@ enum SearchBackends {
   }) => switch (this) {
     .ripgrep => "rg -l '$query' $baseDir | head -n $limit",
     .fdfind => "fd '$query' $baseDir | head -n $limit",
-    .find => "find $baseDir -name '$query' | head -n $limit",
+    .find =>
+      Platform.isLinux
+          ? "find $baseDir -name '$query' | head -n $limit"
+          : "find '$query' $baseDir",
   };
 }
