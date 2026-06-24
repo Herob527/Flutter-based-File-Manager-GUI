@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // State
   String _searchQuery = initialValue;
   Mode _mode = .list;
-  SearchBackends _backend = .ripgrep;
+  SearchBackends _backend = .find;
   late String _currentDir = fileSystemService.homeDir;
 
   Timer? _debounceTimer;

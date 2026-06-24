@@ -20,7 +20,7 @@ class SearchService {
     String query,
     String baseDir, {
     int limit = defaultLimit,
-    SearchBackends backend = .ripgrep,
+    SearchBackends backend = .find,
   }) async {
     try {
       cancelCurrentSearch();
