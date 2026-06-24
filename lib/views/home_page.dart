@@ -158,6 +158,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 items: [
                   DropdownMenuItem(
+                    value: SearchBackends.find,
+                    enabled: SearchBackends.find.isInstalled,
+                    child: Text("find"),
+                  ),
+                  DropdownMenuItem(
                     value: SearchBackends.fdfind,
                     enabled: SearchBackends.fdfind.isInstalled,
                     child: Text("fdfind"),
