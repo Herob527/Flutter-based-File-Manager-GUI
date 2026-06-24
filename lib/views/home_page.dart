@@ -22,14 +22,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // Services
   final FileSystemService fileSystemService = getIt<FileSystemService>();
   final SearchService searchService = getIt<SearchService>();
-  late String _currentDir = fileSystemService.homeDir;
+
+  // State
   String _searchQuery = initialValue;
   Mode _mode = .list;
   SearchBackends _backend = .ripgrep;
 
+  // Dependent
+  late String _currentDir = fileSystemService.homeDir;
+
   Timer? _debounceTimer;
+
+  // Text inputs
   TextEditingController? queryController = .new(text: initialValue);
 
   @override
