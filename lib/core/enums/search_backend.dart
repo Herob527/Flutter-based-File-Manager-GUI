@@ -1,13 +1,21 @@
 import 'dart:io';
 
+T? safeExecute<T>(T Function() fn) {
+  try {
+    return fn();
+  } on Exception catch (_) {
+    return null;
+  }
+}
+
 enum SearchBackends {
   ripgrep,
   fdfind,
   find;
 
   bool get isInstalled => switch (this) {
-    .ripgrep => Process.runSync("rg", ["--version"]).exitCode == 0,
-    .fdfind => Process.runSync("fd", ["--version"]).exitCode == 0,
+    .ripgrep => safeExecute(() => Process.runSync("rg", ["--version"])) != null,
+    .fdfind => safeExecute(() => Process.runSync("fd", ["--version"])) != null,
     .find => true,
   };
 
