@@ -10,6 +10,13 @@ class FileSystemService {
     _ => throw UnsupportedError('Unsupported platform'),
   };
 
+  String get separator => switch (Platform.operatingSystem) {
+    'windows' => '\\',
+    'macos' => '/',
+    'linux' => '/',
+    _ => throw UnsupportedError('Unsupported platform'),
+  };
+
   bool isRoot(String dir) {
     final absolute = Directory(dir).absolute;
     return absolute.parent.path == absolute.path;
