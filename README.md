@@ -12,7 +12,7 @@ This project aims to experiment with wrapping `ripgrep`, `fd-find`, `find` and o
 ## Scope
 
 - [x] Traversal through file system
-- [ ] Checking for executables of ripgrep and others
+- [x] Checking for executables of ripgrep and others
 - [x] Search using ripgrep and fdfind (with defaults)
 - [x] Capability to choose between search backends (ripgrep, fd-find)
 - [ ] Compatibility with Linux, Windows and macOS
