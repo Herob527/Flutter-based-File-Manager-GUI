@@ -56,11 +56,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget buildFileSystemItem(FileSystemEntity entity, bool isFirst) {
-    final entityPath = entity.path.endsWith("/")
+    final entityPath = entity.path.endsWith(fileSystemService.separator)
         ? entity.path.substring(0, entity.path.length - 1)
         : entity.path;
     final textWidget = Text(
-      _mode == .search ? entityPath : entityPath.split("/").last,
+      _mode == .search
+          ? entityPath
+          : entityPath.split(fileSystemService.separator).last,
     );
     IconButton icon;
     switch (entity) {
