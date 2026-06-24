@@ -24,7 +24,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final FileSystemService fileSystemService = getIt<FileSystemService>();
   final SearchService searchService = getIt<SearchService>();
-  String _currentDir = getIt<FileSystemService>().homeDir;
+  late String _currentDir = fileSystemService.homeDir;
   String _searchQuery = initialValue;
   Mode _mode = .list;
   SearchBackends _backend = .ripgrep;
