@@ -214,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text("Search failed. Please try again."),
                 );
               }
-              if (asyncSnapshot.data!.isEmpty) {
+              if (asyncSnapshot.data!.isEmpty && _mode == .list) {
                 return buildGoUpButton();
               }
               return Expanded(
