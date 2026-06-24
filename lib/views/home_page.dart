@@ -161,7 +161,22 @@ class _MyHomePageState extends State<MyHomePage> {
                       (backend) => DropdownMenuItem(
                         value: backend,
                         enabled: backend.isInstalled,
-                        child: Text(backend.label),
+                        child: Row(
+                          mainAxisAlignment: .spaceBetween,
+                          children: [
+                            Text(backend.label),
+                            Tooltip(
+                              message: backend.isInstalled
+                                  ? ""
+                                  : "Install ${backend.label} to activate this backend",
+                              child: Icon(
+                                backend.isInstalled
+                                    ? Icons.check_sharp
+                                    : Icons.warning,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                     .toList(),
