@@ -156,24 +156,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 },
 
-                items: [
-                  DropdownMenuItem(
-                    value: SearchBackends.find,
-                    enabled: SearchBackends.find.isInstalled,
-                    child: Text("find"),
-                  ),
-                  DropdownMenuItem(
-                    value: SearchBackends.fdfind,
-                    enabled: SearchBackends.fdfind.isInstalled,
-                    child: Text("fdfind"),
-                  ),
-
-                  DropdownMenuItem(
-                    value: SearchBackends.ripgrep,
-                    enabled: SearchBackends.ripgrep.isInstalled,
-                    child: Text("ripgrep"),
-                  ),
-                ],
+                items: SearchBackends.values
+                    .map(
+                      (backend) => DropdownMenuItem(
+                        value: backend,
+                        enabled: backend.isInstalled,
+                        child: Text(backend.label),
+                      ),
+                    )
+                    .toList(),
               ),
             ],
           ),

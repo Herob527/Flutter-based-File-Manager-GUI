@@ -13,6 +13,12 @@ enum SearchBackends {
   fdfind,
   find;
 
+  String get label => switch (this) {
+    .ripgrep => "ripgrep",
+    .fdfind => "fdfind",
+    .find => "find",
+  };
+
   bool get isInstalled => switch (this) {
     .ripgrep => safeExecute(() => Process.runSync("rg", ["--version"])) != null,
     .fdfind => safeExecute(() => Process.runSync("fd", ["--version"])) != null,
