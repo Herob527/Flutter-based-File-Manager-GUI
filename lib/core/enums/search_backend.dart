@@ -2,12 +2,13 @@ import 'dart:io';
 
 enum SearchBackends {
   ripgrep,
-  fdfind;
+  fdfind,
+  find;
 
   bool get isInstalled => switch (this) {
-    SearchBackends.ripgrep =>
-      Process.runSync("rg", ["--version"]).exitCode == 0,
-    SearchBackends.fdfind => Process.runSync("fd", ["--version"]).exitCode == 0,
+    .ripgrep => Process.runSync("rg", ["--version"]).exitCode == 0,
+    .fdfind => Process.runSync("fd", ["--version"]).exitCode == 0,
+    .find => true,
   };
 
   String buildCommand({
@@ -15,7 +16,8 @@ enum SearchBackends {
     required String baseDir,
     required int limit,
   }) => switch (this) {
-    SearchBackends.ripgrep => "rg -l '$query' $baseDir | head -n $limit",
-    SearchBackends.fdfind => "fd '$query' $baseDir | head -n $limit",
+    .ripgrep => "rg -l '$query' $baseDir | head -n $limit",
+    .fdfind => "fd '$query' $baseDir | head -n $limit",
+    .find => "find $baseDir -name '$query' | head -n $limit",
   };
 }
